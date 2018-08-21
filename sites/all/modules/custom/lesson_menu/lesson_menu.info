@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 name = Lesson Menu Module
 description = Hometask #1 module
 core = 7.x
 package = Drupal Training Course
+=======
+name = Lesson Menu Module
+description = Hometask #1 module
+core = 7.x
+package = Drupal Training Course
+>>>>>>> 986ad87... first hometask

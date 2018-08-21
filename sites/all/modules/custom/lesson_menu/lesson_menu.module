@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 /**
@@ -311,3 +312,318 @@ function lesson_menu_theme() {
 
   return $theme;
 }
+=======
+<?php
+
+/**
+ * @file
+ * Describes functions to create custom menu items, handle arguments and customize theme.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function lesson_menu_menu() {
+  $items['training/menu'] = [
+    'title' => 'Training Landing Page',
+    'description' => 'Landing page of this module',
+    'page callback' => 'lesson_menu_render_landing',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+    'expanded' => TRUE,
+  ];
+  $items['training/menu/custom_access'] = [
+    'title' => 'Custom Access Menu Item',
+    'description' => 'Page for authenticated only',
+    'access callback' => 'user_is_logged_in',
+  ];
+  $items['training/menu/permissioned'] = [
+    'title' => 'Permissioned Menu Item',
+    'description' => 'Page that available for users with specific permission',
+    'access arguments' => [
+      'access protected menu example',
+    ],
+  ];
+  $items['training/menu/callback'] = [
+    'title' => 'The menu entry for this page is of type MENU_CALLBACK',
+    'description' => 'MENU_CALLBACK item',
+    'access arguments' => [
+      'access content',
+    ],
+    'type' => MENU_CALLBACK,
+  ];
+  $items['training/menu/tabs'] = [
+    'title' => 'Tabs',
+    'description' => 'Tabs page',
+    'page callback' => 'lesson_menu_render_tabs',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/menu/tabs/default'] = [
+    'title' => 'First',
+    'description' => 'First tab',
+    'access arguments' => [
+      'access content',
+    ],
+    'page arguments' => [
+      3,
+    ],
+    'weight' => 1,
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ];
+  $items['training/menu/tabs/second'] = [
+    'title' => 'Second',
+    'description' => 'Second tab',
+    'access arguments' => [
+      'access content',
+    ],
+    'page arguments' => [
+      3,
+    ],
+    'weight' => 1,
+    'type' => MENU_LOCAL_TASK,
+  ];
+  $items['training/menu/tabs/third'] = [
+    'title' => 'Third',
+    'description' => 'Third tab',
+    'access arguments' => [
+      'access content',
+    ],
+    'page arguments' => [
+      3,
+    ],
+    'weight' => 2,
+    'type' => MENU_LOCAL_TASK,
+  ];
+  $items['training/menu/tabs/fourth'] = [
+    'title' => 'Fourth',
+    'description' => 'Fourth tab',
+    'access arguments' => [
+      'access content',
+    ],
+    'page arguments' => [
+      3,
+    ],
+    'weight' => 3,
+    'type' => MENU_LOCAL_TASK,
+  ];
+  $items['training/menu/tabs/default/first'] = [
+    'title' => 'First',
+    'description' => 'First subtab',
+    'access arguments' => [
+      'access content',
+    ],
+    'page arguments' => [
+      3,
+    ],
+    'weight' => 1,
+    'tab_parent' => 'training/menu/tabs/default',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  ];
+  $items['training/menu/tabs/default/second'] = [
+    'title' => 'Subtab Second',
+    'description' => 'Second subtab',
+    'access arguments' => [
+      'access content',
+    ],
+    'page arguments' => [
+      3,
+    ],
+    'weight' => 1,
+    'tab_parent' => 'training/menu/tabs/default',
+    'type' => MENU_LOCAL_TASK,
+  ];
+  $items['training/menu/tabs/default/third'] = [
+    'title' => 'Subtab Third',
+    'description' => 'Third subtab',
+    'access arguments' => [
+      'access content',
+    ],
+    'page arguments' => [
+      3,
+    ],
+    'weight' => 2,
+    'tab_parent' => 'training/menu/tabs/default',
+    'type' => MENU_LOCAL_TASK,
+  ];
+  $items['training/menu/arguments'] = [
+    'title' => 'Page That Prints Arguments',
+    'page callback' => 'lesson_menu_render_arguments',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/menu/arguments/%one/%two'] = [
+    'title' => 'Page That Prints Arguments',
+    'description' => 'Page for printing passed arguments',
+    'page callback' => 'lesson_menu_render_arguments',
+    'page arguments' => [
+      3, 4,
+    ],
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/menu/placeholder/%/display'] = [
+    'title' => 'Page With Dynamic Argument',
+    'description' => 'Page that shows dynamic argument inside div',
+    'page callback' => 'lesson_menu_render_div',
+    'page arguments' => [
+      3,
+    ],
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/menu/default_arg/%argument'] = [
+    'title' => 'Page With Dynamic Argument',
+    'description' => 'Page that shows dynamic argument',
+    'page callback' => 'lesson_menu_show_page_with_argument',
+    'page arguments' => [
+      3,
+    ],
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/menu/title'] = [
+    'title' => 'Username',
+    'description' => 'Page that shows username',
+    'title callback' => 'lesson_menu_username',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/menu/main'] = [
+    'title' => 'Item in main menu',
+    'description' => 'Page in main menu',
+    'access arguments' => [
+      'access content',
+    ],
+    'menu_name' => 'main-menu',
+  ];
+  $items['training/theme'] = [
+    'title' => 'Themes Page',
+    'description' => 'Landing page for theme course part',
+    'page callback' => 'lesson_menu_render_theme',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/theme/table'] = [
+    'title' => 'Table',
+    'description' => 'Page with table',
+    'page callback' => 'lesson_menu_render_table',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/theme/image'] = [
+    'title' => 'Image',
+    'description' => 'Page with images and their styles',
+    'page callback' => 'lesson_menu_render_image',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+  $items['training/theme/access'] = [
+    'title' => 'Access',
+    'description' => 'Page with content that depends on access permission',
+    'page callback' => 'lesson_menu_render_access',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_menu.pages.inc',
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function lesson_menu_permission() {
+  $permissions = [
+    'access protected menu example' => [
+      'title' => t('lesson_menu module - access protected menu example'),
+      'description' => t('permission for page that available for specific users'),
+    ],
+    'access protected content' => [
+      'title' => t('lesson_menu module - access protected content'),
+      'description' => t('permission for page with protected content'),
+    ],
+  ];
+
+  return $permissions;
+}
+
+/**
+ * Load wildcard handler for first passed argument.
+ */
+function one_load($val) {
+  $one = $val; // executing some heavy operations and returning prepared argument
+
+  return $one;
+}
+
+/**
+ * Load wildcard handler for second passed argument.
+ */
+function two_load($val) {
+  $two = $val; // executing some heavy operations and returning prepared argument
+
+  return $two;
+}
+
+/**
+ * Load wildcard handler.
+ */
+function argument_load($val) {
+  switch ($val) {
+    case 1:
+      $val = t('one');
+      break;
+
+    case 2:
+      $val = t('two');
+      break;
+
+    case 3:
+      $val = t('three');
+      break;
+
+    case 99:
+      $val = t('Almost there');
+      break;
+
+    default:
+      $val = t('404');
+  }
+
+  return $val;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function lesson_menu_theme() {
+  $theme['lesson_menu_render_images'] = [
+    'variables' => ['list' => NULL, 'generated_images' => NULL, 'original_image' => NULL],
+    'template' => 'templates/images_page_template',
+  ];
+
+  return $theme;
+}
+>>>>>>> 986ad87... first hometask
