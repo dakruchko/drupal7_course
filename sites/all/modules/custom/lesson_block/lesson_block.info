@@ -1,0 +1,4 @@
+name = Lesson Block Module
+description = Hometask #2 module (currencies rates)
+core = 7.x
+package = Drupal Training Course
