@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Module file for lesson_filestorage.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function lesson_filestorage_menu() {
+  $items['filestorage'] = [
+    'title'            => 'File Storage',
+    'description'      => 'File Storage Landing Page',
+    'page callback'    => 'lesson_filestorage_landing_table',
+    'access arguments' => [
+      'access content',
+    ],
+    'file'             => 'lesson_filestorage.pages.inc',
+  ];
+
+  $items['filestorage/%ctools_js/upload'] = [
+    'title' => 'Upload New File',
+    'page callback' => 'lesson_filestorage_upload_file',
+    'page arguments' => [1],
+    'delivery callback' => 'ajax_deliver',
+    'access arguments' => [
+      'access content',
+    ],
+    'theme callback' => 'ajax_base_page_theme',
+    'file' => 'lesson_filestorage.pages.inc',
+    'type' => MENU_CALLBACK,
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function lesson_filestorage_block_info() {
+  $blocks['upload_link'] = [
+    'info' => t('Upload Form Link'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function lesson_filestorage_block_view($delta = '') {
+  $block = [];
+  if ($delta == 'upload_link') {
+    lesson_filestorage_settings_modal();
+    $block['content'] = ctools_modal_text_button(t('Upload File'), 'filestorage/nojs/upload', t('Upload'), 'ctools-modal-filestorage-form-style');
+  }
+
+  return $block;
+}
+
+/**
+ * Implements settings for modal window.
+ */
+function lesson_filestorage_settings_modal() {
+  static $added = FALSE;
+  if ($added == FALSE) {
+    $added = TRUE;
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_modal_add_js();
+    $modal_style = [
+      'filestorage-form-style' => [
+        'modalSize' => [
+          'type' => 'fixed',
+          'width' => 420,
+          'height' => 'auto',
+        ],
+        'modalOptions' => [
+          'opacity' => (float) 0.3,
+          'background-color' => '#000000',
+        ],
+        'animation' => 'fadeIn',
+        'animationSpeed' => 'fast',
+      ],
+    ];
+    drupal_add_js($modal_style, 'setting');
+  }
+}

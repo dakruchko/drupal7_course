@@ -1,0 +1,13 @@
+/**
+ * @file
+ * CSS file for lesson_filestorage module
+ */
+
+/* Hide 'uid' table column. */
+.uploaded-files-table th:nth-child(2), .uploaded-files-table td:nth-child(2) {
+  display: none;
+}
+/* Highlight files uploaded by current user. */
+.uploaded-by-you {
+  background-color: #00bb00 !important;
+}
