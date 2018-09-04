@@ -1,0 +1,50 @@
+<?php
+/**
+ * @file
+ * Install file for lesson_entity module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function lesson_entity_schema() {
+  $schema['lesson_entity'] = [
+    'description' => 'The base table for lesson_entity module.',
+    'fields' => [
+      'id' => [
+        'description' => 'Primary key of the entity.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'uid' => [
+        'description' => 'User ID',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'type' => [
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'title' => [
+        'description' => 'A title of the item',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'body' => [
+        'description' => 'A description of the item',
+        'type' => 'text',
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  return $schema;
+}
