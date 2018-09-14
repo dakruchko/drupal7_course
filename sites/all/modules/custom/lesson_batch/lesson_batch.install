@@ -1,0 +1,42 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the lesson_batch module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function lesson_batch_schema() {
+  $schema = [];
+  $schema['lesson_batch'] = [
+    'description' => 'The base table for lesson_batch module.',
+    'fields' => [
+      'id' => [
+        'description' => 'Id of the currency',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'size' => 'small',
+        'not null' => TRUE,
+      ],
+      'title' => [
+        'description' => 'Currency name',
+        'type' => 'varchar',
+        'length' => 50,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'rate' => [
+        'type' => 'numeric',
+        'unsigned' => TRUE,
+        'precision' => 10,
+        'scale' => 5,
+        'not null' => FALSE,
+      ],
+    ],
+    'primary key' => ['id'],
+  ];
+
+  return $schema;
+}
