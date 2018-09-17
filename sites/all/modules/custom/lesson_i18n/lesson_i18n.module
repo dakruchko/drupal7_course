@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * @file
+ * Module file for lesson_i18n.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function lesson_i18n_menu() {
+  $items['training/random_number'] = [
+    'title' => 'random task number',
+    'description' => 'i18n Page that shows random number',
+    'page callback' => 'lesson_i18n_random_number',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_i18n.pages.inc',
+  ];
+
+  $items['training/user_registered_date'] = [
+    'title' => 'show dates',
+    'description' => 'i18n Page that shows user registration date and days to New Year',
+    'page callback' => 'lesson_i18n_link_get_user_registration_date',
+    'access arguments' => [
+      'access content',
+    ],
+    'file' => 'lesson_i18n.pages.inc',
+  ];
+
+  $items['training/form_textarea'] = [
+    'title' => 'form with textarea',
+    'description' => 'Just a form with textarea',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['lesson_i18n_form'],
+    'access callback' => TRUE
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_form().
+ */
+function lesson_i18n_form($form, &$form_state) {
+
+  $form['textarea'] = [
+    '#type' => 'textarea',
+  ];
+
+  $form['submit_button'] = [
+    '#type' => 'submit',
+    '#value' => t('Click Here!'),
+  ];
+
+  if(isset($form_state['values']['textarea'])) {
+    $form['textarea_display'] = [
+      '#markup' => '<p>' . check_plain($form_state['values']['textarea']) . '</p>',
+    ];
+  }
+
+  return $form;
+}
+
+/**
+ * Submit handler for lesson_i18n_form.
+ */
+function lesson_i18n_form_submit($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
+}
