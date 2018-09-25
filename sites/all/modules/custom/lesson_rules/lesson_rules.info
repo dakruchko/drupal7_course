@@ -1,0 +1,4 @@
+name = Lesson Rules Module
+description = Hometask #7 module (Tokens & Rules)
+core = 7.x
+package = Drupal Training Course
