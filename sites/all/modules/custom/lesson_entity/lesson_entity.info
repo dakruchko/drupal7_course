@@ -1,0 +1,4 @@
+name = Lesson Entity Module
+description = Hometask #4 module (Entity)
+core = 7.x
+package = Drupal Training Course
