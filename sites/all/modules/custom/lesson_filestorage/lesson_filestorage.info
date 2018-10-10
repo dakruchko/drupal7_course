@@ -1,0 +1,5 @@
+name = Lesson Filestorage Module
+description = Hometask #3 module (Files & Libraries)
+core = 7.x
+package = Drupal Training Course
+dependencies[] = ctools
