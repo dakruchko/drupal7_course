@@ -1,0 +1,4 @@
+name = Lesson i18n Module
+description = Hometask #6 module (i18n, dates, security)
+core = 7.x
+package = Drupal Training Course
