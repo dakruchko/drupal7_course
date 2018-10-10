@@ -1,0 +1,152 @@
+<?php
+/**
+ * @file
+ * Module file for lesson_batch.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function lesson_batch_menu() {
+  $items['filestorage'] = [
+    'title'            => 'File Storage',
+    'description'      => 'File Storage Landing Page',
+    'page callback'    => 'lesson_batch_landing_table',
+    'access arguments' => [
+      'access content',
+    ],
+    'file'             => 'lesson_batch.pages.inc',
+  ];
+
+  $items['filestorage/%ctools_js/upload'] = [
+    'title' => 'Upload New File',
+    'page callback' => 'lesson_batch_upload_file',
+    'page arguments' => [1],
+    'delivery callback' => 'ajax_deliver',
+    'access arguments' => [
+      'access content',
+    ],
+    'theme callback' => 'ajax_base_page_theme',
+    'file' => 'lesson_batch.pages.inc',
+    'type' => MENU_CALLBACK,
+  ];
+
+  $items['run_batch'] = [
+    'title' => 'Run Batch',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['lesson_batch_form'],
+    'access callback' => TRUE,
+  ];
+
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function lesson_batch_block_info() {
+  $blocks['upload_link'] = [
+    'info' => t('Upload Form Link'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function lesson_batch_block_view($delta = '') {
+  $block = [];
+  if ($delta == 'upload_link') {
+    lesson_batch_settings_modal();
+    $block['content'] = ctools_modal_text_button(t('Upload File'), 'filestorage/nojs/upload', t('Upload'), 'ctools-modal-filestorage-form-style');
+  }
+
+  return $block;
+}
+
+/**
+ * Implements settings for modal window.
+ */
+function lesson_batch_settings_modal() {
+  static $added = FALSE;
+  if ($added == FALSE) {
+    $added = TRUE;
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_modal_add_js();
+    $modal_style = [
+      'filestorage-form-style' => [
+        'modalSize' => [
+          'type' => 'fixed',
+          'width' => 420,
+          'height' => 'auto',
+        ],
+        'modalOptions' => [
+          'opacity' => (float) 0.3,
+          'background-color' => '#000000',
+        ],
+        'animation' => 'fadeIn',
+        'animationSpeed' => 'fast',
+      ],
+    ];
+    drupal_add_js($modal_style, 'setting');
+  }
+}
+
+/**
+ * Sends request to fetch currency rates.
+ */
+function lesson_batch_get_currency_rates() {
+  $endpoint = 'http://www.nbrb.by/API/ExRates/Rates?Periodicity=0';
+  $request = drupal_http_request($endpoint);
+  $result = $request->data ?? '';
+
+  return $result;
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function lesson_batch_views_api() {
+  return [
+    'api' => 3,
+    'path' => drupal_get_path('module', 'lesson_batch') . '/includes/views',
+  ];
+}
+
+/**
+ * Implements hook_form().
+ */
+function lesson_batch_form() {
+  $form = [];
+  $form['submit'] = [
+    '#type' => 'submit',
+    '#value' => t('Run Batch'),
+  ];
+
+  return $form;
+}
+
+/**
+ * Submit callback for lesson batch form
+ */
+function lesson_batch_form_submit($form, &$form_state) {
+  $data = lesson_batch_get_currency_rates();
+  $batch = [
+    'title' => t('Currencies processing'),
+    'operations' => [
+      ['lesson_batch_process_currencies', [$data]],
+    ],
+    'finished' => 'lesson_batch_finished_callback',
+    'file' => drupal_get_path('module', 'lesson_batch') . '/lesson_batch.batch.inc',
+  ];
+  if ($data !== '') {
+    batch_set($batch);
+    batch_process();
+  }
+  else {
+    drupal_set_message('Sorry, this service is temporary unavailable');
+  }
+}
