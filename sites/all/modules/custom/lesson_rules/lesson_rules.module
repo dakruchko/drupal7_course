@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * @file
+ * Module file for lesson_rules.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function lesson_rules_menu() {
+  $items['lottery'] = [
+    'title' => 'Lottery',
+    'description' => 'Lottery page',
+    'page callback' => 'lesson_rules_render_lottery_page',
+    'access arguments' => [
+      'access content',
+    ],
+  ];
+
+  return $items;
+}
+
+/**
+ * Page callback: Displays a lottery page.
+ *
+ * @see lesson_rules_menu().
+ */
+function lesson_rules_render_lottery_page() {
+  rules_invoke_event('lesson_rules');
+  return '';
+}
+
+/*
+ * Implements hook_xmlrpc().
+ */
+function lesson_rules_xmlrpc() {
+  $methods[] = [
+      'lesson_rules.ping',
+      'lesson_rules_ping',
+      [
+        'integer',
+        'integer',
+      ],
+      t('Lottery'),
+  ];
+
+  return $methods;
+}
+
+/*
+ * Compares 2 numbers and generates lottery result.
+ */
+function lesson_rules_ping($arg) {
+  return (mt_rand(1, 8) === $arg) ? 1 : 0;
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function lesson_rules_flush_caches() {
+  return ['cache_lesson_rules'];
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function lesson_rules_block_info() {
+  $blocks['lottery_results'] = [
+    'info' => t('Recent Lotteries'),
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function lesson_rules_block_view($delta = '') {
+  $block = [];
+  if ($delta == 'lottery_results') {
+    $block['content'] = lesson_rules_lottery_results();
+  }
+
+  return $block;
+}
+
+/*
+ * Generates and outputs list of recent lottery results.
+ */
+function lesson_rules_lottery_results() {
+  $recent_lotteries = db_select('cache_lesson_rules', 'cl')
+    ->fields('cl', array('cid', 'data', 'created'))
+    ->execute()
+    ->fetchAllAssoc('cid');
+
+  $lotteries_results = [];
+  foreach ($recent_lotteries as $data) {
+    $result = (unserialize($data->data)->winner_code === 0) ? 'loss' : 'win';
+    $lotteries_results[] = format_date($data->created, $type = 'long') . '-' . $result;
+  }
+
+  return theme('item_list', $variables = [
+    'items' =>  $lotteries_results,
+    'type' => 'ul',
+  ]);
+}
